@@ -25,15 +25,15 @@ public class TennisGame1 implements TennisGame {
 
     public String getScore() {
         if (isSameScore()) {
-            return handleSameScoreForBothPlayers();
+            return getSameScoreForBothPlayers();
         } else if (isAnyPlayerCloseToWin()) {
-            return handleScoreForPlayerCloseToWin();
+            return getScoreForPlayerCloseToWin();
         } else {
-            return handleRegularScore();
+            return getRegularScore();
         }
     }
 
-    private String handleRegularScore() {
+    private String getRegularScore() {
         return getRegularScoreForPlayer(playerOneScore) +
                 "-" +
                 getRegularScoreForPlayer(playerTwoScore);
@@ -49,7 +49,7 @@ public class TennisGame1 implements TennisGame {
         };
     }
 
-    private String handleScoreForPlayerCloseToWin() {
+    private String getScoreForPlayerCloseToWin() {
         int playerOneScoreDifference = playerOneScore - playerTwoScore;
         if (playerOneScoreDifference == 1) return "Advantage " + player1Name;
         else if (playerOneScoreDifference == -1) return "Advantage " + player2Name;
@@ -65,7 +65,7 @@ public class TennisGame1 implements TennisGame {
         return playerOneScore == playerTwoScore;
     }
 
-    private String handleSameScoreForBothPlayers() {
+    private String getSameScoreForBothPlayers() {
         return switch (playerOneScore) {
             case 0 -> "Love-All";
             case 1 -> "Fifteen-All";
