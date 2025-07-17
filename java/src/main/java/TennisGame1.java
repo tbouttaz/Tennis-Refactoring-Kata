@@ -3,8 +3,8 @@ public class TennisGame1 implements TennisGame {
 
     private int playerOneScore = 0;
     private int playerTwoScore = 0;
-    private String player1Name;
-    private String player2Name;
+    private final String player1Name;
+    private final String player2Name;
 
     public TennisGame1(String player1Name, String player2Name) {
         this.player1Name = player1Name;
@@ -12,47 +12,49 @@ public class TennisGame1 implements TennisGame {
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
+        if (isPlayerOne(playerName)) {
             playerOneScore += 1;
-        else
+        } else {
             playerTwoScore += 1;
+        }
+    }
+
+    private boolean isPlayerOne(String playerName) {
+        return playerName == player1Name;
     }
 
     public String getScore() {
         if (isSameScore()) {
             return handleSameScoreForBothPlayers();
         } else if (isAnyPlayerCloseToWin()) {
-            return handlePlayerAboutToWin();
+            return handleScoreForPlayerCloseToWin();
         } else {
             return handleRegularScore();
         }
     }
 
     private String handleRegularScore() {
-        StringBuilder scoreBuilder = new StringBuilder();
-        int tempScore = 0;
-        for (int i = 1; i < 3; i++) {
-            if (i == 1) tempScore = playerOneScore;
-            else {
-                scoreBuilder.append("-");
-                tempScore = playerTwoScore;
-            }
-            switch (tempScore) {
-                case 0 -> scoreBuilder.append("Love");
-                case 1 -> scoreBuilder.append("Fifteen");
-                case 2 -> scoreBuilder.append("Thirty");
-                case 3 -> scoreBuilder.append("Forty");
-            }
-        }
-        return scoreBuilder.toString();
+        return getRegularScoreForPlayer(playerOneScore) +
+                "-" +
+                getRegularScoreForPlayer(playerTwoScore);
     }
 
-    private String handlePlayerAboutToWin() {
-        int minusResult = playerOneScore - playerTwoScore;
-        if (minusResult == 1) return "Advantage player1";
-        else if (minusResult == -1) return "Advantage player2";
-        else if (minusResult >= 2) return "Win for player1";
-        else return "Win for player2";
+    private static String getRegularScoreForPlayer(int playerScore) {
+        return switch (playerScore) {
+            case 0 -> "Love";
+            case 1 -> "Fifteen";
+            case 2 -> "Thirty";
+            case 3 -> "Forty";
+            default -> throw new IllegalStateException("Unexpected value: " + playerScore);
+        };
+    }
+
+    private String handleScoreForPlayerCloseToWin() {
+        int playerOneScoreDifference = playerOneScore - playerTwoScore;
+        if (playerOneScoreDifference == 1) return "Advantage " + player1Name;
+        else if (playerOneScoreDifference == -1) return "Advantage " + player2Name;
+        else if (playerOneScoreDifference >= 2) return "Win for " + player1Name;
+        else return "Win for " + player2Name;
     }
 
     private boolean isAnyPlayerCloseToWin() {
