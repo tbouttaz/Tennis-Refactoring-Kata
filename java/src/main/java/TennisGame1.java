@@ -1,8 +1,8 @@
 
 public class TennisGame1 implements TennisGame {
 
-    private int m_score1 = 0;
-    private int m_score2 = 0;
+    private int playerOneScore = 0;
+    private int playerTwoScore = 0;
     private String player1Name;
     private String player2Name;
 
@@ -13,42 +13,48 @@ public class TennisGame1 implements TennisGame {
 
     public void wonPoint(String playerName) {
         if (playerName == "player1")
-            m_score1 += 1;
+            playerOneScore += 1;
         else
-            m_score2 += 1;
+            playerTwoScore += 1;
     }
 
     public String getScore() {
-        String score = "";
-        int tempScore = 0;
-        if (m_score1 == m_score2) {
+        String score;
+        if (isSameScore()) {
             score = handleSameScoreForBothPlayers();
-        } else if (m_score1 >= 4 || m_score2 >= 4) {
-            int minusResult = m_score1 - m_score2;
+        } else if (playerOneScore >= 4 || playerTwoScore >= 4) {
+            int minusResult = playerOneScore - playerTwoScore;
             if (minusResult == 1) score = "Advantage player1";
             else if (minusResult == -1) score = "Advantage player2";
             else if (minusResult >= 2) score = "Win for player1";
             else score = "Win for player2";
         } else {
+            StringBuilder scoreBuilder = new StringBuilder();
+            int tempScore = 0;
             for (int i = 1; i < 3; i++) {
-                if (i == 1) tempScore = m_score1;
+                if (i == 1) tempScore = playerOneScore;
                 else {
-                    score += "-";
-                    tempScore = m_score2;
+                    scoreBuilder.append("-");
+                    tempScore = playerTwoScore;
                 }
                 switch (tempScore) {
-                    case 0 -> score += "Love";
-                    case 1 -> score += "Fifteen";
-                    case 2 -> score += "Thirty";
-                    case 3 -> score += "Forty";
+                    case 0 -> scoreBuilder.append("Love");
+                    case 1 -> scoreBuilder.append("Fifteen");
+                    case 2 -> scoreBuilder.append("Thirty");
+                    case 3 -> scoreBuilder.append("Forty");
                 }
             }
+            score = scoreBuilder.toString();
         }
         return score;
     }
 
+    private boolean isSameScore() {
+        return playerOneScore == playerTwoScore;
+    }
+
     private String handleSameScoreForBothPlayers() {
-        return switch (m_score1) {
+        return switch (playerOneScore) {
             case 0 -> "Love-All";
             case 1 -> "Fifteen-All";
             case 2 -> "Thirty-All";
