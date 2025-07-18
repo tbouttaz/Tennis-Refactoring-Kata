@@ -21,63 +21,49 @@ public class TennisGame6 implements TennisGame {
         if (isTieScore()) {
             return getTieScore();
         } else if (player1Score >= 4 || player2Score >= 4) {
-            return getEngGameScore();
+            return getEndGameScore();
         } else {
             return getRegularScore();
         }
     }
 
     private String getRegularScore() {
-        String result;
-        // regular score
-        String regularScore;
+        String score1 = getScoreNameForPlayer(player1Score);
+        String score2 = getScoreNameForPlayer(player2Score);
 
-        String score1 = switch (player1Score) {
-            case 0 -> "Love";
-            case 1 -> "Fifteen";
-            case 2 -> "Thirty";
-            default -> "Forty";
-        };
-
-        var score2 = switch (player2Score) {
-            case 0 -> "Love";
-            case 1 -> "Fifteen";
-            case 2 -> "Thirty";
-            default -> "Forty";
-        };
-
-        regularScore = score1 + "-" + score2;
-
-        result = regularScore;
-        return result;
+        return score1 + "-" + score2;
     }
 
-    private String getEngGameScore() {
-        String result;
-        // end-game score
-        String endGameScore;
+    private String getScoreNameForPlayer(int score) {
+        return getScore(score);
+    }
 
-        if (player1Score - player2Score == 1) {
-            endGameScore = "Advantage " + player1Name;
-        } else if (player1Score - player2Score == -1) {
-            endGameScore = "Advantage " + player2Name;
-        } else if (player1Score - player2Score >= 2) {
-            endGameScore = "Win for " + player1Name;
-        } else {
-            endGameScore = "Win for " + player2Name;
-        }
-
-        result = endGameScore;
-        return result;
+    private String getScore(int score) {
+        return switch (score) {
+            case 0 -> "Love";
+            case 1 -> "Fifteen";
+            case 2 -> "Thirty";
+            default -> "Forty";
+        };
     }
 
     private String getTieScore() {
         return switch (player1Score) {
-            case 0 -> "Love-All";
-            case 1 -> "Fifteen-All";
-            case 2 -> "Thirty-All";
+            case 0, 1, 2 -> getScore(player1Score) + "-All";
             default -> "Deuce";
         };
+    }
+
+    private String getEndGameScore() {
+        if (player1Score - player2Score == 1) {
+            return "Advantage " + player1Name;
+        } else if (player1Score - player2Score == -1) {
+            return "Advantage " + player2Name;
+        } else if (player1Score - player2Score >= 2) {
+            return "Win for " + player1Name;
+        } else {
+            return "Win for " + player2Name;
+        }
     }
 
     private boolean isTieScore() {
