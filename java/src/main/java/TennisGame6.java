@@ -28,17 +28,10 @@ public class TennisGame6 implements TennisGame {
     }
 
     private String getRegularScore() {
-        String score1 = getScoreNameForPlayer(player1Score);
-        String score2 = getScoreNameForPlayer(player2Score);
-
-        return score1 + "-" + score2;
+        return getScoreName(player1Score) + "-" + getScoreName(player2Score);
     }
 
-    private String getScoreNameForPlayer(int score) {
-        return getScore(score);
-    }
-
-    private String getScore(int score) {
+    private String getScoreName(int score) {
         return switch (score) {
             case 0 -> "Love";
             case 1 -> "Fifteen";
@@ -49,7 +42,7 @@ public class TennisGame6 implements TennisGame {
 
     private String getTieScore() {
         return switch (player1Score) {
-            case 0, 1, 2 -> getScore(player1Score) + "-All";
+            case 0, 1, 2 -> getScoreName(player1Score) + "-All";
             default -> "Deuce";
         };
     }
